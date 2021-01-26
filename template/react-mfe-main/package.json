@@ -1,12 +1,19 @@
 {
-  "name": "dgg-scripts",
+  "name": "react-mfe-main",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "babel src --out-dir bin",
-    "compile": "babel src --out-dir .compile --source-maps"
+    "start": "monsterg-scripts start",
+    "build": "monsterg-scripts build",
+    "analyse": "monsterg-scripts lint",
+    "autoConfig": "monsterg-scripts autoConfig",
+    "format": "cyber-scripts format",
+    "prettier": "prettier --write **/*.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "qiankun": "^2.3.6"
+  }
 }

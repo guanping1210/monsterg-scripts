@@ -25,9 +25,14 @@ program
 program
     .command('create <projectName>')
     .description('创建新项目')
-    .option('-s, --sub', '创建微服务子应用模板项目')
+    .option('--react', '创建微服务react主应用模板')
+    .option('--vue', '创建微服务vue主应用模板')
+    .option('--sub-react', '创建微服务react子应用模板项目')
+    .option('--sub-vue', '创建微服务react子应用模板项目')
     .action(function(projectName, options) {
-        createProject(projectName, options.sub)
+        // 这儿匹配多个模板项目，所以用key值作为唯一值, 如果key为空，默认选用--react
+        const templateName = Object.keys(options)[0] || 'react'
+        createProject(projectName, templateName)
     })
 
 // 加上这一句，才能打印出信息
