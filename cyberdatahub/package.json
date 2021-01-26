@@ -1,0 +1,13 @@
+{
+  "name": "dgg-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "mfe",
+  "scripts": {
+    "build": "babel src --out-dir bin",
+    "compile": "babel src --out-dir .compile --source-maps"
+  },
+  "author": "",
+  "license": "ISC"
+}
