@@ -2,18 +2,23 @@
   "name": "react-mfe-main",
   "version": "1.0.0",
   "description": "",
+  "type": "react",
   "main": "index.js",
   "scripts": {
     "start": "monsterg-scripts start",
     "build": "monsterg-scripts build",
     "analyse": "monsterg-scripts lint",
     "autoConfig": "monsterg-scripts autoConfig",
-    "format": "cyber-scripts format",
+    "format": "monsterg-scripts format",
     "prettier": "prettier --write **/*.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "qiankun": "^2.3.6"
+    "qiankun": "^2.3.6",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "@babel/plugin-transform-react-jsx": "^7.12.12",
+    "@babel/preset-env": "^7.12.11"
   }
 }

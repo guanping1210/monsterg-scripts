@@ -1,13 +1,17 @@
 {
-  "name": "dgg-scripts",
+  "name": "vue-mfe-main",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "mfe",
+  "type": "vue",
   "scripts": {
     "build": "babel src --out-dir bin",
     "compile": "babel src --out-dir .compile --source-maps"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "qiankun": "^2.3.6",
+    "monsterg-scripts": "latest"
+  }
 }

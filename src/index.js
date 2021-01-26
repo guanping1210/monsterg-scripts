@@ -17,11 +17,7 @@ program
 		console.log('success: ', projectName, options)
 	})
 
-program
-    .command('start')
-    .description('启动项目...')
-    .action(runStart)
-
+// 新建模板项目
 program
     .command('create <projectName>')
     .description('创建新项目')
@@ -35,9 +31,28 @@ program
         createProject(projectName, templateName)
     })
 
+// 利用monsterg-scripts启动项目
+program
+    .command('start')
+    .description('启动项目...')
+    .action(runStart)
+
+// 利用monsterg-scripts 构建项目
+program
+    .command('build')
+    .description("构建项目")
+    .option('--dev', "开发模式")
+    .action(runBuild)
+
+program
+    .command('analyzer')
+    .description('分析项目')
+    .action(runAnalyzer)
+
 // 加上这一句，才能打印出信息
 program.parse(process.argv)
 
+// 执行start命令
 function runStart() {
     portfinder.basePort = 3000
     portfinder
@@ -62,5 +77,36 @@ function runStart() {
             )
         })
         .catch()
+}
+
+// 执行build命令
+function runBuild(options) {
+    const projectPath = `${process.cwd()}/node_modules`
+    const args = [
+        `NODE_ENV=${options.dev ? 'development' : 'production'}`,
+        `${projectPath}/webpack/bin/webpack.js`,
+        '--config',
+        require.resolve('../scripts/build.js')
+    ]
+
+    spawn.sync('cross-env', args, {
+        stdio: 'inherit'
+    })
+}
+
+// 执行anzlyzer
+function runAnalyzer() {
+    const projectPath = `${process.cwd()}/node_modules`
+    const args = [
+        'ANALYZER=true',
+        'NODE_ENV=production',
+        `${projectPath}/webpack/bin/webpack.js`,
+        '--config',
+        require.resolve('../scripts/build.js')
+    ]
+
+    spawn.sync('cross-env', args, {
+        stdio: 'inherit'
+    })
 }
 

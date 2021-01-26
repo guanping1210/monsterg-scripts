@@ -1,11 +1,60 @@
 const { resolveApp } = require('../config')
 
 function isMefBuild(){
-    const { type } = require(`${resolveApp('')}/package.json`)
+    const { type = '' } = require(`${resolveApp('')}/package.json`)
+    console.log('isMefBuild', type)
 
-    return type === 'mfe'
+    return type.indexOf('sub') !== -1
+}
+
+function isReactBuild() {
+    const { type = '' } = require(`${resolveApp('')}/package.json`)
+    console.log('isReact', type)
+    return type.indexOf('react') !== -1
+}
+
+function getWebpackMode(isMfe) {
+    if(process.env.NODE_ENV === 'development') {
+        return 'development'
+    }
+
+    return isMfe ? 'none' : 'production'
+}
+
+function getCustomConfig() {
+    try {
+        return require(`${resolveApp('')}/hh/config.js`)
+    } catch(err) {
+        console.log(err)
+        console.error('请确保config.js配置文件存在')
+        process.exit(1)
+    }
+}
+
+function getDevServerCustom() {
+    const customConfig = getCustomConfig()
+    const { apiProxy } = customConfig
+    const proxy = {}
+
+    Object.keys(apiProxy).forEach(api => {
+        const write = `^${api}`
+        proxy[api] = {
+            target: process.env.NODE_ENV === 'production' ? apiProxy[api].pro : apiProxy[api].dev,
+            changeOrigin: true,
+            secure: false,
+            pathRewrite: {
+                [write]: ''
+            }
+        }
+    })
+
+    return proxy
 }
 
 module.exports = {
-    isMefBuild
+    isMefBuild,
+    isReactBuild,
+    getWebpackMode,
+    getCustomConfig,
+    getDevServerCustom
 }

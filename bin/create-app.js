@@ -47,7 +47,6 @@ function checkProjectExist(projectName) {
 
 
 function cloneTemplate(source, dest) {
-  console.log('clone', source, dest);
   (0, _ncp.ncp)(source, dest, function (err) {
     if (err) {
       return console.error(err);
