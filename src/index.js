@@ -26,8 +26,17 @@ program
     .option('--sub-react', '创建微服务react子应用模板项目')
     .option('--sub-vue', '创建微服务react子应用模板项目')
     .action(function(projectName, options) {
-        // 这儿匹配多个模板项目，所以用key值作为唯一值, 如果key为空，默认选用--react
-        const templateName = Object.keys(options)[0] || 'react'
+        // 这儿匹配多个模板项目，所以用key值作为唯一值
+        let templateName = 'react'
+
+        if(options.vue) {
+            templateName = 'vue'
+        } else if(options.subReact) {
+            templateName = 'subReact'
+        } else if(options.subVue) {
+            templateName = 'subVue'
+        }
+
         createProject(projectName, templateName)
     })
 

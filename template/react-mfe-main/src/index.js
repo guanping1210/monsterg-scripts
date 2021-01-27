@@ -1,6 +1,8 @@
 console.log('主应用测试')
 
-fetch(`/test/v1/topics`).then(res => {
+fetch(`/test/v1/topics`)
+.then(res => res.json())
+.then(res => {
     console.log('接口测试成功', res)
 })
 

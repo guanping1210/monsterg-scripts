@@ -16,7 +16,6 @@ const templateProject = {
 export function createProject(projectName, templateName) {
     // 检测文件夹是否已经存在，存在则退出进程
     checkProjectExist(projectName)
-
     const appPath = path.resolve(__dirname, '..')
 
     cloneTemplate(

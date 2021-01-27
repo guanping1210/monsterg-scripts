@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 // 重点注意：这儿引入webpack之后，不能在其他地方再new webpack，否则会有作用域问题
 // 最后发现好像是版本有什么问题，我用cyber-script的依赖就没问题。用自己的依赖就有问题
-const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const appDirectory = fs.realpathSync(process.cwd())

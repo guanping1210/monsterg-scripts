@@ -6,7 +6,6 @@ const { CleanWebpackPlugin }  = require('clean-webpack-plugin')
 const { isMefBuild, getWebpackMode, isReactBuild, getDevServerCustom } = require('./utils')
 const {
     resolveApp,
-    isProduction,
     resolve,
     plugins,
     rules,
@@ -39,7 +38,7 @@ module.exports = function() {
 		plugins.push(
 			new webpack.HotModuleReplacementPlugin(),
 			new HtmlWebpackPlugin({
-				template: resolveApp('hh/index.html')
+				template: resolveApp('public/index.html')
 			}),
 			new CleanWebpackPlugin(),
 			new webpack.ProvidePlugin({
@@ -61,11 +60,11 @@ module.exports = function() {
     return {
         mode: 'development',
         entry: {
-            index: resolveApp('hh/src/index.js')
+            index: resolveApp("src")
         },
         output: {
-            filename: '[name].[thunk:hash:8].js',
-            path: resolveApp('hh/dist')
+            filename: '[name].js',
+            path: resolveApp('dist')
         },
         plugins,
         resolve,
@@ -78,7 +77,6 @@ module.exports = function() {
         },
         devServer: {
 			hot: true,
-			// quiet:true,
 			disableHostCheck: true, 
             proxy: getDevServerCustom()
         },

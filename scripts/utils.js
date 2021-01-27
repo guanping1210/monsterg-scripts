@@ -23,7 +23,7 @@ function getWebpackMode(isMfe) {
 
 function getCustomConfig() {
     try {
-        return require(`${resolveApp('')}/hh/config.js`)
+        return require(`${resolveApp('')}/config.js`)
     } catch(err) {
         console.log(err)
         console.error('请确保config.js配置文件存在')

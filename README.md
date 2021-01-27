@@ -27,3 +27,7 @@
     或者
     npm install
 ```
+
+<!--
+    "test": "rm -rf hh && node ./bin/index.js create hh --react && node ./bin/index.js start"
+ -->

@@ -64,7 +64,7 @@ module.exports = function() {
     return {
         mode: getWebpackMode(mfeBuild),
         entry: {
-            index: resolveApp('hh/src')
+            index: resolveApp("src")
         },
         plugins,
         resolve,

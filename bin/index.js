@@ -20,8 +20,17 @@ program.command('test <projectName>').description('测试node命令').action(fun
 }); // 新建模板项目
 
 program.command('create <projectName>').description('创建新项目').option('--react', '创建微服务react主应用模板').option('--vue', '创建微服务vue主应用模板').option('--sub-react', '创建微服务react子应用模板项目').option('--sub-vue', '创建微服务react子应用模板项目').action(function (projectName, options) {
-  // 这儿匹配多个模板项目，所以用key值作为唯一值, 如果key为空，默认选用--react
-  const templateName = Object.keys(options)[0] || 'react';
+  // 这儿匹配多个模板项目，所以用key值作为唯一值
+  let templateName = 'react';
+
+  if (options.vue) {
+    templateName = 'vue';
+  } else if (options.subReact) {
+    templateName = 'subReact';
+  } else if (options.subVue) {
+    templateName = 'subVue';
+  }
+
   (0, _createApp.createProject)(projectName, templateName);
 }); // 利用monsterg-scripts启动项目
 
