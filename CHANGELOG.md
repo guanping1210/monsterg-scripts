@@ -8,7 +8,9 @@
 
 ##### 本地测试 CLI:
 
-    npm install -g 可以发布到本地，本地就可以使用monsterg-scripts命令了
+    本地发布之前，需要先删除旧版本，也就是先执行npm uninstall monsterg-scripts -g
+
+    再执行npm install -g 发布到本地，本地就可以使用monsterg-scripts命令了
 
 ##### 本地项目内部依赖了 monsterg-scripts
 
