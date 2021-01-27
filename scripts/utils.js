@@ -47,7 +47,7 @@ function getDevServerCustom() {
             }
         }
     })
-
+    console.log(4444, proxy)
     return proxy
 }
 
