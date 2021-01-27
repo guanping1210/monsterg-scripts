@@ -54,6 +54,16 @@ module.exports = function() {
             include: /(src|config.js)/,
             use: ['vue-loader'],
         })
+        plugins.push(
+			new webpack.HotModuleReplacementPlugin(),
+			new HtmlWebpackPlugin({
+				template: resolveApp('public/index.html')
+			}),
+			new CleanWebpackPlugin(),
+			new webpack.ProvidePlugin({
+				Vue: 'vue',
+			})
+		)
         resolve.extensions = ['.js', '.vue']
     }
 

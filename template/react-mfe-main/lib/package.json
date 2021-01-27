@@ -9,7 +9,8 @@
   "scripts": {
     "build": "babel src --out-dir bin",
     "compile": "babel src --out-dir .compile --source-maps",
-    "template": "yarn build && node ./utils/copy.js"
+    "template": "yarn build && node ./utils/copy.js",
+    "clear": "node ./utils/clear.js"
   },
   "author": "",
   "license": "ISC",

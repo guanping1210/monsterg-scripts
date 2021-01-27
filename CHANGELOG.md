@@ -8,7 +8,7 @@
 
 ##### 本地测试 CLI:
 
-    npm install 可以发布到本地，本地就可以使用monsterg-scripts命令了
+    npm install -g 可以发布到本地，本地就可以使用monsterg-scripts命令了
 
 ##### 本地项目内部依赖了 monsterg-scripts
 
