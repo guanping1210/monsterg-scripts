@@ -1,3 +1,4 @@
+// @ts-nocheck
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin }  = require('clean-webpack-plugin')
@@ -10,6 +11,7 @@ const {
     plugins,
     rules,
 } = require('../config')
+const webpack = require('webpack')
 
 module.exports = function() {
     const mfeBuild = isMefBuild()
@@ -34,6 +36,17 @@ module.exports = function() {
                 }
             },
         })
+		plugins.push(
+			new webpack.HotModuleReplacementPlugin(),
+			new HtmlWebpackPlugin({
+				template: resolveApp('hh/index.html')
+			}),
+			new CleanWebpackPlugin(),
+			new webpack.ProvidePlugin({
+				React: 'react',
+				ReactDOM: 'react-dom'
+			})
+		)
         resolve.extensions = ['.js', 'jsx']
     } else {
         rules.push({
@@ -60,28 +73,14 @@ module.exports = function() {
             colors: true,
             children: false
         },
-        // module: {
-        //     rules,
-        // },
+        module: {
+            rules,
+        },
         devServer: {
+			hot: true,
+			// quiet:true,
+			disableHostCheck: true, 
             proxy: getDevServerCustom()
         },
-        module: {
-            rules: [
-                {
-                    test: /\.(js|jsx)$/,
-                    // @ts-ignore
-                    include: /(src|config.js)/,
-                    use: {
-                        // @ts-ignore
-                        loader: 'babel-loader',
-                        options: {
-                            presets: ['@babel/preset-env'],
-                            plugins: ['@babel/plugin-transform-react-jsx'],
-                        },
-                    },
-                }
-            ]
-        }
     }
 }
