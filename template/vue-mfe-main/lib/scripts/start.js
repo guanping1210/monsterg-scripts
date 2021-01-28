@@ -38,7 +38,7 @@ module.exports = function() {
     },
     devServer: {
       hot: true,
-      port: 8080,
+      port: process.env.PORT,
       host: "0.0.0.0",
       contentBase: "./",
       disableHostCheck: true
@@ -83,7 +83,8 @@ const setReactConfig = () => {
   plugins.push(
     new webpack.ProvidePlugin({
       React: "react",
-      ReactDOM: "react-dom"
+      ReactDOM: "react-dom",
+      QianKun: "qiankun"
     })
   );
   resolve.extensions = [".js", "jsx"];
@@ -98,7 +99,8 @@ const setVueConfig = () => {
   plugins.push(
     new VueLoaderPlugin(),
     new webpack.ProvidePlugin({
-      Vue: "vue"
+      Vue: "vue",
+      QianKun: "qiankun"
     })
   );
   resolve.extensions = [".vue", ".js"];
