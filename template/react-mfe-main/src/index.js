@@ -1,13 +1,3 @@
-console.log('主应用测试')
+import App from "./App";
 
-fetch(`/test/v1/topics`)
-.then(res => res.json())
-.then(res => {
-    console.log('接口测试成功', res)
-})
-
-const App = () => {
-    return <div>react测试</div>
-}
-
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById("root"));

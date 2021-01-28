@@ -1,4 +1,10 @@
-##### 1.0.1 发布上线测试
+##### 1.0.2 新增本地测试 CLI 相关的脚本
+
+    新增package.json的scripts命令：
+    template：打包monsterg-scripts源码到模板项目的lib目录下，方便本地测试；
+    clear：清空模板项目下的lib，修正模板下package.json中的脚手架路径，方便发布上线
+
+##### 1.0.1 添加 vue 模板项目
 
 ##### 1.0.0 搭建脚手架基本骨架
 

@@ -1,5 +1,3 @@
-console.log('子应用测试')
+import App from "./App";
 
-
-const dom = document.createTextNode('子应用')
-document.body.appendChild(dom)
+ReactDOM.render(<App />, document.getElementById("root"));
