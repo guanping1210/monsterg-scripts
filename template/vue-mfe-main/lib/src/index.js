@@ -23,8 +23,8 @@ program
   .description("创建新项目")
   .option("--react", "创建微服务react主应用模板")
   .option("--vue", "创建微服务vue主应用模板")
-  .option("--sub-react", "创建微服务react子应用模板项目")
-  .option("--sub-vue", "创建微服务react子应用模板项目")
+  .option("--react-sub", "创建微服务react子应用模板项目")
+  .option("--vue-sub", "创建微服务react子应用模板项目")
   .action(function(projectName, options) {
     // 这儿匹配多个模板项目，所以用key值作为唯一值
     let templateName = "react";

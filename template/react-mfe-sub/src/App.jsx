@@ -1,6 +1,6 @@
 import { BrowserRouter, Route } from "react-router-dom";
-import About from "./About";
-import UserInfo from "./UserInfo";
+import About from "./About.jsx";
+import UserInfo from "./UserInfo.jsx";
 
 const App = () => {
   return (

@@ -2,7 +2,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const { isReactBuild } = require("./utils");
+const { isReactBuild, getSPASubAppName } = require("./utils");
 const { resolveApp, resolve, plugins, rules } = require("../config");
 const webpack = require("webpack");
 
@@ -25,7 +25,11 @@ module.exports = function() {
     },
     output: {
       filename: "[name].js",
-      path: resolveApp("dist")
+      path: resolveApp("dist"),
+      // 微服务子应用相关配置
+      library: getSPASubAppName(), // 读取自定义package.name中的name
+      libraryTarget: "umd", // 将子应用暴露为所有的模块定义下都可运行的放啊hi
+      jsonpFunction: `webpackJsonp_${getSPASubAppName}` // 按需加载相关的
     },
     plugins,
     resolve,
@@ -40,7 +44,17 @@ module.exports = function() {
       hot: true,
       port: process.env.PORT,
       host: "0.0.0.0",
-      contentBase: "./",
+      contentBase: resolveApp("dist"),
+      publicPath: "/",
+      stats: "errors-only",
+      // TODO: 测试qiankun时，加载子应用失败，存在跨域问题，暂时用以下配置解决
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      // true：项目任意404响应都可能被替换为index.html，但是这只适合独立项目
+      // TODO：如果是微服务主应用上加载了子应用页面，F5刷新，会找不到页面
+      // historyApiFallback: true,
+      historyApiFallback: true,
       disableHostCheck: true
     }
   };
@@ -88,6 +102,7 @@ const setReactConfig = () => {
     })
   );
   resolve.extensions = [".js", "jsx"];
+  resolve.modules = ["node_modules"];
 };
 
 const setVueConfig = () => {

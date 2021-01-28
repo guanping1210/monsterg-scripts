@@ -4,6 +4,10 @@ import App from "./App";
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
+/**
+ * 下面的代码是根据qiankun这个库实现的微服务，如果不需要，注释掉或者删除以下代码即可
+ */
+
 // qiankun: 微服务框架
 // 主应用中定义state, 可以传递给子应用使用
 // 主应用中提供了修改state的方法，在子应用中可以使用
@@ -20,13 +24,15 @@ actions.offGlobalStateChange();
 // name: 子应用名字
 // entry: 子应用访问路径
 // container：子应用挂载到主应用的哪个DOM节点上
-// activeRule：子应用的前缀路径
+// activeRule：子应用代码所在的目录
+
+// 本地开发的时候，activeRule一定要和子应用的文件夹名对应起来
 registerMicroApps([
   {
-    name: "appName",
+    name: "subApp",
     entry: "http://localhost:3000",
     container: "#sub-root",
-    activeRule: "subName"
+    activeRule: "react-mfe-sub"
   }
 ]);
 

@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import App from "./App";
+import App from "./App.jsx";
 
 // 挂载的节点不同
 function render(props) {
@@ -12,7 +12,7 @@ function render(props) {
   );
 }
 
-// 不是微服务，直接渲染
+// 不是微服务，挂载自己的节点
 if (!window.__POWERED_BY_QIANKUN__) {
   render({});
 }

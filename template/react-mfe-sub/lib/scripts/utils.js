@@ -2,15 +2,17 @@ const { resolveApp } = require('../config')
 
 function isMefBuild(){
     const { type = '' } = require(`${resolveApp('')}/package.json`)
-    console.log('isMefBuild', type)
-
     return type.indexOf('sub') !== -1
 }
 
 function isReactBuild() {
     const { type = '' } = require(`${resolveApp('')}/package.json`)
-    console.log('isReact', type)
     return type.indexOf('react') !== -1
+}
+
+function getSPASubAppName() {
+    const { name } = require(`${resolveApp('')}/package.json`)
+    return name
 }
 
 function getWebpackMode(isMfe) {
@@ -56,5 +58,6 @@ module.exports = {
     isReactBuild,
     getWebpackMode,
     getCustomConfig,
+    getSPASubAppName,
     getDevServerCustom
 }
