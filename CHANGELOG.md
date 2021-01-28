@@ -1,4 +1,4 @@
-##### 1.0.3 修复 npm 版本的 monsterg-scripts 指向
+##### 1.0.4 修复 npm 版本的 monsterg-scripts 指向
 
 ##### 1.0.2 新增本地测试 CLI 相关的脚本
 
