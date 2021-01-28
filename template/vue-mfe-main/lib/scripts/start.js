@@ -1,94 +1,115 @@
 // @ts-nocheck
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin }  = require('clean-webpack-plugin')
+const path = require("path");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
-const { isMefBuild, getWebpackMode, isReactBuild, getDevServerCustom } = require('./utils')
 const {
-    resolveApp,
-    resolve,
-    plugins,
-    rules,
-} = require('../config')
-const webpack = require('webpack')
+  isMefBuild,
+  //   getWebpackMode,
+  isReactBuild
+  //   getDevServerCustom
+} = require("./utils");
+const { resolveApp, resolve, plugins, rules } = require("../config");
+const webpack = require("webpack");
 
 module.exports = function() {
-    const mfeBuild = isMefBuild()
-    const isReact = isReactBuild()
+  const mfeBuild = isMefBuild();
+  const isReact = isReactBuild();
+  // 针对不同的框架要区分处理的loader
+  // 针对react和vue的配置的插件，应该从具体的项目中读取
+  // module.rules + plugins + css-loader对应的，需要修改
+  // @ts-ignore
+  if (isReact) {
+    setReactConfig();
+  } else {
+    setVueConfig();
+  }
 
-    // 针对不同的框架要区分处理的loader
-    // 针对react和vue的配置的插件，应该从具体的项目中读取
+  return {
+    mode: "development",
+    entry: {
+      index: resolveApp("src/index.js")
+    },
+    output: {
+      filename: "[name].js",
+      path: resolveApp("dist")
+    },
+    plugins,
+    resolve,
+    stats: {
+      colors: true,
+      children: false
+    },
+    module: {
+      rules
+    },
+    devServer: {
+      hot: true,
+      port: 8080,
+      host: "0.0.0.0",
+      contentBase: "./",
+      disableHostCheck: true
+    }
+  };
+};
+
+const setReactConfig = () => {
+  rules.push({
+    test: /\.(js|jsx)$/,
     // @ts-ignore
-    if(isReact) {
-        rules.push({
-            test: /\.(js|jsx)$/,
-            // @ts-ignore
-            include: /(src|config.js)/,
-            use: {
-                // @ts-ignore
-                loader: 'babel-loader',
-                options: {
-                    presets: ['@babel/preset-env'],
-                    plugins: [
-                        '@babel/plugin-transform-react-jsx'
-                    ]
-                }
-            },
-        })
-		plugins.push(
-			new webpack.HotModuleReplacementPlugin(),
-			new HtmlWebpackPlugin({
-				template: resolveApp('public/index.html')
-			}),
-			new CleanWebpackPlugin(),
-			new webpack.ProvidePlugin({
-				React: 'react',
-				ReactDOM: 'react-dom'
-			})
-		)
-        resolve.extensions = ['.js', 'jsx']
-    } else {
-        rules.push({
-            test: /\.(js|vue)$/,
-            // @ts-ignore
-            include: /(src|config.js)/,
-            use: ['vue-loader'],
-        })
-        plugins.push(
-			new webpack.HotModuleReplacementPlugin(),
-			new HtmlWebpackPlugin({
-				template: resolveApp('public/index.html')
-			}),
-			new CleanWebpackPlugin(),
-			new webpack.ProvidePlugin({
-				Vue: 'vue',
-			})
-		)
-        resolve.extensions = ['.js', '.vue']
+    include: /(src|config.js)/,
+    use: {
+      // @ts-ignore
+      loader: "babel-loader",
+      options: {
+        presets: ["@babel/preset-env"],
+        plugins: ["@babel/plugin-transform-react-jsx"]
+      }
     }
+  });
+  rules.push({
+    test: /\.(css|less)$/,
+    use: [
+      MiniCssExtractPlugin.loader,
+      "css-loader",
+      {
+        loader: "postcss-loader",
+        options: {
+          ident: "postcss",
+          plugins: [require("autoprefixer")]
+        }
+      },
+      {
+        loader: "less-loader",
+        options: {
+          javascriptEnabled: true
+        }
+      }
+    ]
+  });
+  plugins.push(
+    new webpack.ProvidePlugin({
+      React: "react",
+      ReactDOM: "react-dom"
+    })
+  );
+  resolve.extensions = [".js", "jsx"];
+};
 
-    return {
-        mode: 'development',
-        entry: {
-            index: resolveApp("src")
-        },
-        output: {
-            filename: '[name].js',
-            path: resolveApp('dist')
-        },
-        plugins,
-        resolve,
-        stats: {
-            colors: true,
-            children: false
-        },
-        module: {
-            rules,
-        },
-        devServer: {
-			hot: true,
-			disableHostCheck: true, 
-            proxy: getDevServerCustom()
-        },
-    }
-}
+const setVueConfig = () => {
+  rules.push({
+    test: /.vue$/,
+    loader: "vue-loader"
+  });
+  plugins.push(
+    new VueLoaderPlugin(),
+    new webpack.ProvidePlugin({
+      Vue: "vue"
+    })
+  );
+  resolve.extensions = [".vue", ".js"];
+  resolve.modules = ["node_modules"];
+  resolve.alias = {
+    vue: "vue/dist/vue.min.js",
+    "@": path.resolve("src")
+  };
+};
