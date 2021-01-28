@@ -59,7 +59,7 @@ const removeScripts = () => {
   addLibTemplate.forEach(template => {
     const templateLibPath = `${templatePath}/${template}/lib`;
     deleteTemplateLib(templateLibPath);
-    updateScriptLink(`${templatePath}/${template}`, "lasted");
+    updateScriptLink(`${templatePath}/${template}`, "latest");
   });
 };
 
