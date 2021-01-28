@@ -1,18 +1,12 @@
 // @ts-nocheck
 const path = require("path");
-const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const {
-  isMefBuild,
-  //   getWebpackMode,
-  isReactBuild
-  //   getDevServerCustom
-} = require("./utils");
+const { isReactBuild } = require("./utils");
 const { resolveApp, resolve, plugins, rules } = require("../config");
 const webpack = require("webpack");
 
 module.exports = function() {
-  const mfeBuild = isMefBuild();
   const isReact = isReactBuild();
   // 针对不同的框架要区分处理的loader
   // 针对react和vue的配置的插件，应该从具体的项目中读取
@@ -96,6 +90,7 @@ const setReactConfig = () => {
 };
 
 const setVueConfig = () => {
+  const VueLoaderPlugin = require("vue-loader/lib/plugin");
   rules.push({
     test: /.vue$/,
     loader: "vue-loader"
