@@ -6,7 +6,7 @@
         template：打包monsterg-scripts源码到模板项目的lib目录下，方便本地测试；
         clear：清空模板项目下的lib，修正模板下package.json中的脚手架路径，方便发布上线
     新增功能：
-        - react相关模板融合了qiankun微服务框架，目前能够本地开发了。
+        - react相关模板融合了qiankun微服务框架，目前能够本地开发了。(但是主应用访问子应用然后刷新有问题，待修复)
 
 ##### 1.0.1 添加 vue 模板项目
 
