@@ -1,6 +1,6 @@
 // @ts-nocheck
 const path = require("path");
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const { isReactBuild, getSPASubAppName } = require("./utils");
 const { resolveApp, resolve, plugins, rules } = require("../config");
@@ -77,8 +77,7 @@ const setReactConfig = () => {
   rules.push({
     test: /\.(css|less)$/,
     use: [
-      // MiniCssExtractPlugin.loader,
-      'style-loader',
+      MiniCssExtractPlugin.loader,
       "css-loader",
       {
         loader: "postcss-loader",
