@@ -3,11 +3,13 @@
 - build 打包
 - 开放配置文件
 - 性能优化
-  - 支持 css 独立打包
+  - 支持 css 独立打包 (mini-css-extract-plugin 提供抽离、引入；optimize-css-assets-webpack-plugin 实现 css 压缩)
+  - thunk 分包（optimization.splitChunk）
   - 支持第三方插件独立打包
-  - 支持 JS/CSS 压缩打包
+  - 支持 JS/CSS 压缩打包 (webpack-parallel-uglify-plugin 多线程打包 JS 文件)
   - 支持离线加载应用
   - 支持多线程打包
+  - 实现 DLL 打包第三方插件
 - 待添加功能
   - 路由配置
   - redux 状态管理
@@ -15,6 +17,12 @@
 - 添加 eslint
 - 支持 typescript
 - 支持代理配置
+
+#### 1.0.6 支持 build 打包
+
+    实现样式文件独立压缩打包；
+    thunk分包；
+    JS多线程打包；
 
 ##### 1.0.4 修复 npm 版本的 monsterg-scripts 指向
 

@@ -1,5 +1,5 @@
 import { Link, BrowserRouter } from "react-router-dom";
-
+import "./App.less";
 const App = () => {
   return (
     <BrowserRouter>

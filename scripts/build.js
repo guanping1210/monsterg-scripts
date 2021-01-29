@@ -1,6 +1,7 @@
 /**
  * build 的 config配置
  */
+const path = require('path')
 const webpack = require("webpack");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin"); // css分割
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin"); // 多线程压缩代码
@@ -21,6 +22,7 @@ module.exports = function() {
   const mfeBuild = isMefBuild();
   const isReact = isReactBuild();
 
+  // 多线程压缩JS
   plugins.push(
     new ParallelUglifyPlugin({
       uglifyES: {
@@ -41,24 +43,46 @@ module.exports = function() {
     // @ts-ignore
     plugins.push(new BundleAnalyzerPlugin());
   }
-
   // 针对不同的框架要区分处理的loader
   // @ts-ignore
   if (isReact) {
-    rules.push({
-      test: /\.(js|jsx)$/,
-      // @ts-ignore
-      include: /(src|config.js)/,
-      use: ["babel-loader"]
-    });
+    rules.push(
+      {
+        test: /\.(js|jsx)$/,
+        // @ts-ignore
+        include: /(src|config.js)/,
+        use: {
+          // @ts-ignore
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-transform-react-jsx"]
+          }
+        }
+      }
+    );
+    plugins.push(
+      // 支持全局配置
+      new webpack.ProvidePlugin({
+        React: 'react',
+        ReactDOM: 'react-dom'
+      })
+      // JS模块分包
+    )
     resolve.extensions = [".js", "jsx"];
   } else {
+    const VueLoaderPlugin = require("vue-loader/lib/plugin");
+    // @ts-ignore
     rules.push({
-      test: /\.(js|vue)$/,
-      // @ts-ignore
-      include: /(src|config.js)/,
-      use: ["vue-loader"]
+      test: /\.vue$/,
+      loader: "vue-loader"
     });
+    plugins.push(
+      new VueLoaderPlugin(),
+      new webpack.ProvidePlugin({
+        Vue: 'vue'
+      })
+    )
     resolve.extensions = [".js", ".vue"];
   }
 
@@ -67,14 +91,62 @@ module.exports = function() {
     entry: {
       index: resolveApp("src")
     },
-    plugins,
+    output: {
+      filename: '[name].js',
+      path: resolveApp('dist'),
+      publicPath: '/',
+      chunkFilename: '[name].[chunkhash:8].js'
+    },
+    // chunk分割
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        minSize: 2, // 分割的chunk最小为2kb
+        minChunks: 1, // 提取的chunk最少被引用一次
+        name: 'common'
+      }
+    },
+    plugins: [
+      // 将单独提取的css文件，通过插件动态引入进来
+      new MiniCSSExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[name].[chunhash:8].js'
+      }),
+      // 压缩css文件, 内部还可以有一些配置
+      new OptimizeCssAssetsWebpackPlugin(),
+      ...plugins
+    ],
     resolve,
     stats: {
       colors: true,
       children: false
     },
     module: {
-      rules
+      rules: [
+        // 抽离css为单独的文件
+        {
+          test: /\.(css|less)/,
+          use: [
+            MiniCSSExtractPlugin.loader,
+            // 'style-loader',
+            'css-loader',
+            // {
+            //   loader: 'postcss-loader',
+            //   options: {
+						// 		ident: 'postcss',
+						// 		plugins: [require('autoprefixer')],
+						// 	},
+            // },
+            {
+              loader: 'less-loader',
+              options: {
+                javascriptEnable: true,
+              }
+            }
+          ]
+        },
+        ...rules,
+      ]
     }
   };
 };

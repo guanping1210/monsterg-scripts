@@ -11,3 +11,6 @@
     },
   };
 </script>
+<style>
+  @import "./App.less";
+</style>
