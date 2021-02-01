@@ -1,4 +1,5 @@
 import fs from 'fs-extra' // 系统fs模块的扩展
+import _fs from 'fs'
 import path  from 'path'
 import chalk from 'chalk' // 彩色信息
 import { ncp } from 'ncp' // 新建文件夹、复制文件

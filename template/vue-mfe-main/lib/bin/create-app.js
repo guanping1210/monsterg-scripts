@@ -7,6 +7,8 @@ exports.createProject = createProject;
 
 var _fsExtra = _interopRequireDefault(require("fs-extra"));
 
+var _fs2 = _interopRequireDefault(require("fs"));
+
 var _path = _interopRequireDefault(require("path"));
 
 var _chalk = _interopRequireDefault(require("chalk"));

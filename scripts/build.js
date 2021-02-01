@@ -71,7 +71,7 @@ module.exports = function() {
     )
     resolve.extensions = [".js", "jsx"];
   } else {
-    const VueLoaderPlugin = require("vue-loader/lib/plugin");
+    const VueLoaderPlugin = require("./vue/node_modules/vue-loader/lib/plugin");
     // @ts-ignore
     rules.push({
       test: /\.vue$/,

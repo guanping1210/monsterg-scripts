@@ -7,9 +7,19 @@ var _portfinder = _interopRequireDefault(require("portfinder"));
 
 var _crossSpawn = _interopRequireDefault(require("cross-spawn"));
 
+var _fsExtra = _interopRequireWildcard(require("fs-extra"));
+
 var _package = _interopRequireDefault(require("../package.json"));
 
+var _config = require("../config");
+
 var _createApp = require("./create-app");
+
+var _ncp = _interopRequireDefault(require("ncp"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -75,9 +85,47 @@ function runAnalyzer() {
   _crossSpawn.default.sync("cross-env", args, {
     stdio: "inherit"
   });
-} // 执行eject
+} // 执行eject --> 主要就是把配置文件搞个文件夹暴露出来,配置文件需要从node_modules下面去找寻到
+// 需要把config和scripts都放出来，然后修改package.json里面的scripts
 
 
 function runEject() {
-  console.log("暴露webpack配置");
+  const {
+    type = ''
+  } = require(`${(0, _config.resolveApp)('')}/package.json`);
+
+  const isReact = type.includes('react');
+  (0, _ncp.default)(isReact ? (0, _config.resolveScriptPath)('scripts/react') : (0, _config.resolveScriptPath)('scripts/vue'), 'config', function (err) {
+    if (err) {
+      return console.error(err);
+    }
+
+    console.log('配置初始化完成');
+  });
+  ['build.js', 'utils.js'].forEach(filename => {
+    if (!_fsExtra.default.existsSync('scripts')) {
+      _fsExtra.default.ensureDir('scripts');
+    }
+
+    (0, _ncp.default)((0, _config.resolveScriptPath)(`scripts/${filename}`), `scripts/${filename}`, function (err) {
+      if (err) {
+        return console.error(err);
+      }
+    });
+  });
+
+  _fsExtra.default.outputFileSync('test/start.js', `
+    const path = require("path");
+    const { isReactBuild } = require("./utils");
+
+    module.exports = function() {
+      return require('../config/webpack.dev')
+    }
+  `); // ncp(resolveScriptPath('scripts/start.js') , 'scripts', function(err) {
+  //   if(err) {
+  //       return console.error(err)
+  //   }
+  //   console.log(('配置初始化完成'))
+  // }) 
+
 }

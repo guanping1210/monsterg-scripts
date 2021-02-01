@@ -10,6 +10,10 @@ const resolveApp = relativePath => {
   return path.resolve(appDirectory, relativePath);
 };
 
+const resolveScriptPath = (relativePath) => {
+  return path.resolve('node_modules/monsterg-scripts', relativePath)
+}
+
 const isProduction = process.env.NODE_ENV === "production";
 
 const resolve = {
@@ -66,6 +70,7 @@ const rules = [
 ];
 
 module.exports = {
+  resolveScriptPath,
   resolveApp,
   appDirectory,
   isProduction,

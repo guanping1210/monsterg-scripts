@@ -3,8 +3,13 @@
 import commander from "commander";
 import portfinder from "portfinder"; // 自动分配端口
 import spawn from "cross-spawn";
+import fs from 'fs-extra'
+
 import packageJson from "../package.json";
+import { resolveApp, resolveScriptPath, appDirectory } from '../config'
 import { createProject } from "./create-app";
+import ncp from "ncp";
+import { fstat } from "fs-extra";
 
 const program = new commander.Command();
 
@@ -125,7 +130,46 @@ function runAnalyzer() {
   });
 }
 
-// 执行eject
+// 执行eject --> 主要就是把配置文件搞个文件夹暴露出来,配置文件需要从node_modules下面去找寻到
+// 需要把config和scripts都放出来，然后修改package.json里面的scripts
 function runEject() {
-  console.log("暴露webpack配置");
+    const { type = '' } = require(`${resolveApp('')}/package.json`)
+    const isReact = type.includes('react');
+
+    ncp(isReact ? resolveScriptPath('scripts/react') : resolveScriptPath('scripts/vue') , 'config', function(err) {
+      if(err) {
+          return console.error(err)
+      }
+
+      console.log(('配置初始化完成'))
+  });
+
+  [ 'build.js', 'utils.js'].forEach(filename => {
+    if(!fs.existsSync('test')) {
+      fs.ensureDir('test')
+    }
+    ncp(resolveScriptPath(`scripts/${filename}`) , `test/${filename}`, function(err) {
+      if(err) {
+          return console.error(err)
+      }
+    }) 
+  })
+
+  fs.outputFileSync('test/start.js', `
+    const path = require("path");
+    const { isReactBuild } = require("./utils");
+
+    module.exports = function() {
+      return require('../config/webpack.dev')
+    }
+  `)
+
+  // 修改package.json中的scripts命令
+  // TODO: 目前暂时用webpack-dev-server来替代项目的运行，后续需要自己写逻辑，来按照devServer的样子执行start
+  // 修改每个模板项目下的package.json中的monsterg-script的地址
+  const jsonPath = resolveApp('package.json')
+  const data = fs.readJsonSync(jsonPath);
+  data.scripts["start"] = 'webpack-dev-server --config ./config/webpack.dev.js';
+  data.scripts["build"] = 'webpack --config ./config/webpack.dev.js';
+  fs.outputJsonSync(jsonPath, data);
 }

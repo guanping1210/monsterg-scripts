@@ -3,8 +3,12 @@
 import commander from "commander";
 import portfinder from "portfinder"; // 自动分配端口
 import spawn from "cross-spawn";
+import fs from 'fs-extra'
 import packageJson from "../package.json";
+import { resolveApp, resolveScriptPath, appDirectory } from '../config'
 import { createProject } from "./create-app";
+import ncp from "ncp";
+import { fstat } from "fs-extra";
 
 const program = new commander.Command();
 
@@ -125,7 +129,47 @@ function runAnalyzer() {
   });
 }
 
-// 执行eject
+// 执行eject --> 主要就是把配置文件搞个文件夹暴露出来,配置文件需要从node_modules下面去找寻到
+// 需要把config和scripts都放出来，然后修改package.json里面的scripts
 function runEject() {
-  console.log("暴露webpack配置");
+    const { type = '' } = require(`${resolveApp('')}/package.json`)
+    const isReact = type.includes('react');
+
+    ncp(isReact ? resolveScriptPath('scripts/react') : resolveScriptPath('scripts/vue') , 'config', function(err) {
+      if(err) {
+          return console.error(err)
+      }
+
+      console.log(('配置初始化完成'))
+  });
+
+  [ 'build.js', 'utils.js'].forEach(filename => {
+    if(!fs.existsSync('scripts')) {
+      fs.ensureDir('scripts')
+    }
+    ncp(resolveScriptPath(`scripts/${filename}`) , `scripts/${filename}`, function(err) {
+      if(err) {
+          return console.error(err)
+      }
+    }) 
+  })
+
+  fs.outputFileSync('test/start.js', `
+    const path = require("path");
+    const { isReactBuild } = require("./utils");
+
+    module.exports = function() {
+      return require('../config/webpack.dev')
+    }
+  `)
+
+  // ncp(resolveScriptPath('scripts/start.js') , 'scripts', function(err) {
+  //   if(err) {
+  //       return console.error(err)
+  //   }
+
+  //   console.log(('配置初始化完成'))
+  // }) 
+
+
 }

@@ -49,7 +49,7 @@ function getDevServerCustom() {
             }
         }
     })
-    console.log(4444, proxy)
+
     return proxy
 }
 
@@ -59,5 +59,5 @@ module.exports = {
     getWebpackMode,
     getCustomConfig,
     getSPASubAppName,
-    getDevServerCustom
+    getDevServerCustom,
 }
