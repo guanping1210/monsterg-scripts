@@ -166,10 +166,14 @@ function runEject() {
 
   // 修改package.json中的scripts命令
   // TODO: 目前暂时用webpack-dev-server来替代项目的运行，后续需要自己写逻辑，来按照devServer的样子执行start
+  // 后续需要用node scripts/start.js 来启动项目
   // 修改每个模板项目下的package.json中的monsterg-script的地址
   const jsonPath = resolveApp('package.json')
   const data = fs.readJsonSync(jsonPath);
-  data.scripts["start"] = 'webpack-dev-server --config ./config/webpack.dev.js';
-  data.scripts["build"] = 'webpack --config ./config/webpack.dev.js';
+  data.scripts = {
+    "start": 'webpack-dev-server --config ./config/webpack.dev.js',
+    "build": 'webpack --config ./config/webpack.dev.js'
+  } 
+
   fs.outputJsonSync(jsonPath, data);
 }

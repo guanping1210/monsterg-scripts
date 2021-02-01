@@ -116,9 +116,23 @@ function runEject() {
 
   _fsExtra.default.outputFileSync('test/start.js', `
     const path = require("path");
+    const { isReactBuild } = require("./utils");
 
     module.exports = function() {
       return require('../config/webpack.dev')
     }
-  `);
+  `); // 修改package.json中的scripts命令
+  // TODO: 目前暂时用webpack-dev-server来替代项目的运行，后续需要自己写逻辑，来按照devServer的样子执行start
+  // 后续需要用node scripts/start.js 来启动项目
+  // 修改每个模板项目下的package.json中的monsterg-script的地址
+
+
+  const jsonPath = (0, _config.resolveApp)('package.json');
+
+  const data = _fsExtra.default.readJsonSync(jsonPath);
+
+  data.scripts["start"] = 'webpack-dev-server --config ./config/webpack.dev.js';
+  data.scripts["build"] = 'webpack --config ./config/webpack.dev.js';
+
+  _fsExtra.default.outputJsonSync(jsonPath, data);
 }
