@@ -6,10 +6,9 @@ import spawn from "cross-spawn";
 import fs from 'fs-extra'
 
 import packageJson from "../package.json";
-import { resolveApp, resolveScriptPath, appDirectory } from '../config'
+import { resolveApp, resolveScriptPath } from '../config'
 import { createProject } from "./create-app";
 import ncp from "ncp";
-import { fstat } from "fs-extra";
 
 const program = new commander.Command();
 
@@ -148,14 +147,14 @@ function runEject() {
     if(!fs.existsSync('test')) {
       fs.ensureDir('test')
     }
-    ncp(resolveScriptPath(`scripts/${filename}`) , `test/${filename}`, function(err) {
+    ncp(resolveScriptPath(`scripts/${filename}`) , `scripts/${filename}`, function(err) {
       if(err) {
           return console.error(err)
       }
     }) 
   })
 
-  fs.outputFileSync('test/start.js', `
+  fs.outputFileSync('scripts/start.js', `
     const path = require("path");
     const { isReactBuild } = require("./utils");
 

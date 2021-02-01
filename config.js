@@ -11,9 +11,7 @@ const resolveApp = relativePath => {
 };
 
 const resolveScriptPath = (relativePath) => {
-  // return path.resolve('node_modules/monsterg-scripts', relativePath)
-  return path.resolve(appDirectory, relativePath);
-
+  return path.resolve('node_modules/monsterg-scripts', relativePath)
 }
 
 const isProduction = process.env.NODE_ENV === "production";
